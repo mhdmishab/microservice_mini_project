@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile   
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/mini_project_users
+    ports:
+      - 3001:3001
+    networks:
+      - microservice-network
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile  
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/mini_project_orders
+    ports:
+      - 8080:8080
+    networks:
+      - microservice-network
+
+  mongo:
+    image: mongo:latest
+    ports: 
+      - 27017:27017
+    volumes:
+      - database:/data/db
+    networks:
+      - microservice-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  database:
+
+networks:
+  microservice-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.0.0/24"
+
