@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
 export const dbConnection=async()=>{
+    const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mini_project_users';
     try{
-        const con= await mongoose.connect('mongodb://127.0.0.1:27017/mini_project_users',{
+        const con= await mongoose.connect(MONGO_URI,{
         });
         console.log(`MongoDB Connected: ${con.connection.host}`);
     }catch(error){
