@@ -8,6 +8,6 @@ dbConnection();
 
 app.use('/orders',ordreRoute);
 
-app.listen(3000,()=>{
-    console.log("order Service is lisenting on 3000")
+app.listen(3001,()=>{
+    console.log("order Service is lisenting on 3001")
 })
